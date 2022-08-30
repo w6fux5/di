@@ -1,9 +1,10 @@
-import React from 'react';
+import { AppProvider } from '@/providers/AppProvider';
+import { AppRoutes } from '@/routes';
 
-import { Test } from '@/features/Test';
-
-export const App = () => (
-  <div>
-    <Test />
-  </div>
-);
+export const App = () => {
+  return (
+    <AppProvider>
+      <AppRoutes />
+    </AppProvider>
+  );
+};

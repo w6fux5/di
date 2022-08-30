@@ -1,0 +1,92 @@
+.card-padding {
+  width: 100%;
+  padding: 0 35rem;
+
+  @media only screen and(max-width: 1600px) {
+    padding: 0 22rem;
+  }
+
+  @media only screen and(max-width: 1200px) {
+    padding: 0 8rem;
+  }
+
+  @media only screen and(max-width: 992px) {
+    padding: 0 6rem;
+  }
+
+  @media only screen and(max-width: 768px) {
+    padding: 0 2rem;
+  }
+
+  @media only screen and(max-width: 576px) {
+    padding: 0 1rem;
+  }
+}
+
+.top {
+  background-image: url(../../../assets/88u_bg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .card {
+    // padding-top: 10rem;
+    font-size: 2.2rem;
+    color: white;
+    height: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-bottom: 5rem;
+  }
+}
+
+.bottom {
+  background-color: #f5fbff;
+  height: 30%;
+
+  .card {
+    height: 100%;
+    margin: auto;
+    padding-top: 2rem;
+
+    .title {
+      text-align: left;
+      margin-bottom: 1rem;
+      color: grey;
+    }
+
+    .info-box {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 80%;
+
+      &:not(:last-child) {
+        margin-bottom: 0.8rem;
+      }
+
+      span {
+        width: 35%;
+
+        &:last-child {
+          font-weight: bolder;
+        }
+      }
+    }
+
+    p {
+      color: #e69f4a;
+    }
+  }
+}
+
+.logo {
+  width: 8rem;
+  margin-bottom: 5px;
+}
