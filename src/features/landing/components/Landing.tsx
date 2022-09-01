@@ -1,15 +1,20 @@
 import { Button } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 
 import logo from '@/assets/88u_logo.png';
 import { LandingLayout } from '@/components/Layout';
+import RemindWindow from '@/components/remindWindow/RemindWindow';
+import { useAuth } from '@/features/auth';
 
 import styles from './Landing.module.less';
 import { LandingLoginForm } from './LandingLoginForm';
 
 export const Landing = () => {
+  const { user } = useAuth();
+  const [showRemind, setShowRemind] = useState(false);
   return (
     <LandingLayout>
+      <RemindWindow setVisible={setShowRemind} visible={showRemind} />
       <section className={styles.top}>
         <div className={`${styles.card} ${styles['card-padding']}`}>
           <img className={styles.logo} src={logo} alt="88u logo" />
@@ -38,10 +43,15 @@ export const Landing = () => {
           </div>
 
           <p> 請在訂單有效時間內完成送出，如已失效請重新申請支付。</p>
-
-          <Button disabled type="primary" block>
-            登入後付款
-          </Button>
+          {!user?.login_session ? (
+            <Button disabled type="primary" block>
+              登入後付款
+            </Button>
+          ) : (
+            <Button onClick={() => setShowRemind(true)} type="primary" block>
+              確認付款
+            </Button>
+          )}
         </div>
       </section>
     </LandingLayout>
