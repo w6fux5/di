@@ -89,7 +89,11 @@ export const LandingLoginForm = ({ onSuccess }: LoginFormProps) => {
               <div>{order?.realSurplus || 0}</div>
             </div>
             <div>
-              <span>{order?.avbSurplus - order?.agtSurplus < 0 && '餘額不足'}</span>
+              {order?.avbSurplus - order?.agtSurplus < 0 ? (
+                <span className={styles.payInsufficient}>餘額不足</span>
+              ) : (
+                <span />
+              )}
               <div>
                 餘額不足?<span>前往購買USDT</span>
               </div>

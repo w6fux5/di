@@ -9,12 +9,27 @@ import { useAuth } from '@/features/auth';
 import styles from './Landing.module.less';
 import { LandingLoginForm } from './LandingLoginForm';
 
+const bodyText = [
+  ['支付數量(USDT):', '-1000'],
+  ['協議種類:', 'Trc'],
+  ['手續費:', 30],
+  ['結餘(USDT):', 1000],
+  ['轉帳地址', 'efwefewfwef'],
+];
+const rmindTitle = ' 交易款項將從您的錢包轉出，請再次確認，確保交易安全。';
+
 export const Landing = () => {
   const { user } = useAuth();
   const [showRemind, setShowRemind] = useState(false);
   return (
     <LandingLayout>
-      <RemindWindow setVisible={setShowRemind} visible={showRemind} />
+      <RemindWindow
+        title={rmindTitle}
+        bodyText={bodyText}
+        setVisible={setShowRemind}
+        visible={showRemind}
+        cancel
+      />
       <section className={styles.top}>
         <div className={`${styles.card} ${styles['card-padding']}`}>
           <img className={styles.logo} src={logo} alt="88u logo" />

@@ -1,3 +1,13 @@
+@keyframes show {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
 .card-padding {
   width: 100%;
   padding: 0 35rem;
@@ -106,6 +116,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
+  animation: show 1s;
   >div:not(:first-child) {
     border-top: 1px solid rgba(128, 128, 128, 0.4);
   }
@@ -138,8 +149,21 @@
     align-items: center;
     justify-content: space-between;
     height: 40%;
-    >div:last-child>span{
+    .payInsufficient{
       color: red;
+      &::before {
+        content: '';
+        display: inline-block;
+        position: relative;
+        background-image: url('../../../assets/餘額不足.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
     }
     >div:last-child>div:last-child>span {
       color: blue;
