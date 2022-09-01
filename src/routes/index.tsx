@@ -1,15 +1,26 @@
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, useLocation } from 'react-router-dom';
 
 // import { useAuth } from '@/features/auth';
-import { LandingRoute } from '@/features/landing';
+import { Landing } from '@/features/misc';
 
 // import { protectedRoutes } from './protected';
 // import { publicRoutes } from './public';
 
 export const AppRoutes = () => {
   // const auth = useAuth();
+  const { pathname, hash } = useLocation();
 
-  const commonRoutes = [{ path: '/', element: <LandingRoute /> }];
+  let sessionID;
+
+  if (import.meta.env.MODE === 'development') {
+    [, sessionID] = pathname.split('/');
+  }
+
+  if (import.meta.env.MODE === 'production') {
+    [, sessionID] = hash.split('/');
+  }
+
+  const commonRoutes = [{ path: '/:sessionID', element: <Landing sessionID={sessionID} /> }];
 
   // const routes = auth.user ? protectedRoutes : publicRoutes;
 
@@ -18,3 +29,6 @@ export const AppRoutes = () => {
 
   return element;
 };
+
+// development
+// production

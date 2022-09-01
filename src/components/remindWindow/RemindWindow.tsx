@@ -1,15 +1,6 @@
-/* eslint-disable react/require-default-props */
-/* eslint-disable react/jsx-no-useless-fragment */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable @typescript-eslint/naming-convention */
-
-import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-
 import styles from './RemindWindow.module.less';
 
-type remindProps = {
+type RemindProps = {
   visible: boolean;
   setVisible: Function;
   cancel?: boolean;
@@ -17,12 +8,19 @@ type remindProps = {
   title: string;
 };
 
-const RemindWindow = ({ visible, setVisible, bodyText, cancel = false, title }: remindProps) => {
-  //   const navigate = useNavigate();
-  console.log();
+const defaultProps = {
+  cancel: false,
+};
 
-  return visible ? (
-    <div className={styles.remindWindowMask}>
+export const RemindWindow = ({
+  visible,
+  setVisible,
+  bodyText,
+  cancel = false,
+  title,
+}: RemindProps) => {
+  return (
+    <div style={{ display: visible ? 'block' : 'none' }} className={styles.remindWindowMask}>
       <div className={styles.remindWindowBlock}>
         <div className={styles.remindWindowTitle}>{title}</div>
         <div className={styles.remindWindowBody}>
@@ -35,23 +33,27 @@ const RemindWindow = ({ visible, setVisible, bodyText, cancel = false, title }: 
         </div>
         <div className={styles.remindWindowFooter}>
           {cancel && (
-            <div onClick={() => setVisible(false)} className={styles.remindWindowBtnCancel}>
+            <button
+              type="button"
+              onClick={() => setVisible(false)}
+              className={styles.remindWindowBtnCancel}
+            >
               取消
-            </div>
+            </button>
           )}
-          <div
+          <button
+            type="button"
             onClick={() => {
               setVisible(false);
             }}
             className={styles.remindWindowBtnConfirm}
           >
             確認
-          </div>
+          </button>
         </div>
       </div>
     </div>
-  ) : (
-    <></>
   );
 };
-export default RemindWindow;
+
+RemindWindow.defaultProps = defaultProps;

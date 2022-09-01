@@ -3,8 +3,4 @@ export type AuthUser = {
   login_session: string;
 };
 
-export type UserResponse = {
-  code: number;
-  data: AuthUser;
-  msg: string;
-};
+export type UserResponse = AuthUser;

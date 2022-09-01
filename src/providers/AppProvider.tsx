@@ -8,7 +8,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Error } from '@/components/Error';
 import { Loading } from '@/components/Loading';
 import { AuthProvider } from '@/features/auth';
-import { queryClient } from '@/lib/react-query/react-query';
+import { queryClient } from '@/lib/react-query';
 
 const ErrorFallback = () => {
   return <Error />;

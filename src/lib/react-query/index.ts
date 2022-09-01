@@ -1,2 +1,2 @@
-export * from './react-query';
+export * from './query-client';
 export * from './constants';

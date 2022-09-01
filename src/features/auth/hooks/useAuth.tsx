@@ -8,9 +8,9 @@ import { loginReq, LoginCredentialsDTO } from '../api/Login';
 import { AuthUser, UserResponse } from '../types';
 
 const handleUserResponse = async (data: UserResponse) => {
-  const { login_session } = data.data;
+  const { login_session } = data;
   storage.setToken(login_session);
-  return data.data;
+  return data;
 };
 
 const loginFn = async (data: LoginCredentialsDTO) => {
