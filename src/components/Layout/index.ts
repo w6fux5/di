@@ -1,2 +1,3 @@
 export * from './AuthLayout';
-export * from './landing-layout/LandingLayout';
+export * from './MainLayout/MainLayout';
+export * from './LandingLayout/LandingLayout';

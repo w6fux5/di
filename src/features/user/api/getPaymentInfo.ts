@@ -3,13 +3,13 @@ import { useQuery } from 'react-query';
 import { axios } from '@/lib/axios';
 import { ExtractFnReturnType, QueryConfig, queryKeys } from '@/lib/react-query';
 
-type PaymentInfo = {
+export type PaymentInfoTypes = {
   RequestDate: string;
   USDTAmt: number;
   WalletAddress: string;
 };
 
-export const getPaymentInfo = (): Promise<PaymentInfo> => {
+export const getPaymentInfo = (): Promise<PaymentInfoTypes> => {
   return axios.post('/DP_OrderDetail.aspx');
 };
 
@@ -21,8 +21,8 @@ type GetPaymentInfoOptions = {
 
 export const usePaymentInfo = ({ config }: GetPaymentInfoOptions = {}) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    ...config,
     queryKey: [queryKeys['payment-info'], '/DP_OrderDetail.aspx'],
     queryFn: () => getPaymentInfo(),
+    ...config,
   });
 };

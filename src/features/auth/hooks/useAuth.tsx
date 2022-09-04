@@ -49,7 +49,7 @@ const authConfig = {
 
 export const { AuthProvider, useAuth } = initReactQueryAuth<
   AuthUser,
-  any,
+  Error,
   LoginCredentialsDTO
   //   RegisterCredentialsDTO
 >(authConfig);

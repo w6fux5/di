@@ -1,61 +1,26 @@
-import { useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
-import logo from '@/assets/88u_logo.png';
-import { LandingLayout } from '@/components/Layout';
-import { useAuth, LandingLoginForm } from '@/features/auth';
-import { TransactionInfo } from '@/features/user';
-import storage from '@/utils/storage';
+import { Loading } from '@/components/Loading';
+import { usePaymentInfo } from '@/features/user';
+import { getParamsFromUrl, urlParamsKey } from '@/utils/urlParse';
 
-import styles from './Landing.module.less';
+import { Error } from '../../components/Error';
 
-type LandingProps = {
-  sessionID: string | undefined;
-};
+export const Landing = () => {
+  const { isSuccess, error, isError } = usePaymentInfo();
 
-export const Landing = ({ sessionID }: LandingProps) => {
-  const { user } = useAuth();
+  // if (isError && typeof error === 'string') {
+  //   return <Error title={error} />;
+  // }
 
-  const onSuccess = () => {
-    console.log('login success');
-  };
-
-  useEffect(() => {
-    if (!sessionID) return;
-    storage.setSession(sessionID);
-  }, [sessionID]);
+  if (isSuccess) {
+    const sessionID = getParamsFromUrl('session_id');
+    return <Navigate to={`/auth?${urlParamsKey.session_id}=${sessionID}`} />;
+  }
 
   return (
-    <LandingLayout>
-      <section className={styles.container}>
-        <div className={`${styles.card}`}>
-          <img className={styles.logo} src={logo} alt="88u logo" />
-          <div style={{ fontSize: '1.5rem' }}>使用 88U ASIA 支付</div>
-          <div style={{ margin: '5px 0 2rem 0' }}>簡易 | 快速 | 24H即時交易到帳</div>
-          {user ? <TransactionInfo /> : <LandingLoginForm onSuccess={onSuccess} />}
-        </div>
-      </section>
-    </LandingLayout>
+    <div>
+      <Loading tip="正在獲取訂單..." />
+    </div>
   );
 };
-
-/**
- * 
- * const bodyText = [
-  ['支付數量(USDT):', '-1000'],
-  ['協議種類:', 'Trc'],
-  ['手續費:', 30],
-  ['結餘(USDT):', 1000],
-  ['轉帳地址', 'efwefewfwef'],
-];
-const reminder = ' 交易款項將從您的錢包轉出，請再次確認，確保交易安全。';
-
-  const [showRemind, setShowRemind] = useState(false);
-
- * 
- *  /* <RemindWindow
-        title={reminder}
-        bodyText={bodyText}
-        setVisible={setShowRemind}
-        visible={showRemind}
-        cancel
-      /> */

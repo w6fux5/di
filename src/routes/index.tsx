@@ -1,31 +1,31 @@
-import { useRoutes, useLocation } from 'react-router-dom';
+import { useRoutes } from 'react-router-dom';
 
-// import { useAuth } from '@/features/auth';
+import { LandingLayout } from '@/components/Layout';
+import { useAuth } from '@/features/auth';
 import { Landing } from '@/features/misc';
+import { getParamsFromUrl } from '@/utils/urlParse';
 
-// import { protectedRoutes } from './protected';
-// import { publicRoutes } from './public';
+import { protectedRoutes } from './protected';
+import { publicRoutes } from './public';
 
 export const AppRoutes = () => {
-  // const auth = useAuth();
-  const { pathname, hash } = useLocation();
+  const auth = useAuth();
+  const sessionID = getParamsFromUrl('session_id');
 
-  let sessionID;
+  const commonRoutes = [
+    {
+      path: '/landing',
+      element: (
+        <LandingLayout>
+          <Landing />
+        </LandingLayout>
+      ),
+    },
+  ];
 
-  if (import.meta.env.MODE === 'development') {
-    [, sessionID] = pathname.split('/');
-  }
+  const routes = auth.user && sessionID ? protectedRoutes : publicRoutes;
 
-  if (import.meta.env.MODE === 'production') {
-    [, sessionID] = hash.split('/');
-  }
-
-  const commonRoutes = [{ path: '/:sessionID', element: <Landing sessionID={sessionID} /> }];
-
-  // const routes = auth.user ? protectedRoutes : publicRoutes;
-
-  // const element = useRoutes([...routes, ...commonRoutes]);
-  const element = useRoutes([...commonRoutes]);
+  const element = useRoutes([...routes, ...commonRoutes]);
 
   return element;
 };

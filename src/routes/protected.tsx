@@ -1,45 +1,40 @@
 import { Suspense } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
+import { MainLayout } from '@/components/Layout';
 import { Loading } from '@/components/Loading';
-import { useAuth } from '@/features/auth';
+import { useResetUrl } from '@/hooks';
+import { lazyImport } from '@/utils/lazyImport';
 
-// import { MainLayout } from '@/components/Layout';
-// import { lazyImport } from '@/utils/lazyImport';
+const { BuyRoute } = lazyImport(() => import('@/features/buy'), 'BuyRoute');
+const { Overview } = lazyImport(() => import('@/features/misc'), 'Overview');
+
+const ProtectRest = () => {
+  useResetUrl('home');
+  return <Loading />;
+};
+
 const ProtectRoute = () => {
   return (
-    <div>
+    <MainLayout>
       <Suspense fallback={<Loading />}>
         <Outlet />
       </Suspense>
-    </div>
-  );
-};
-
-const Home = () => {
-  const { refetchUser } = useAuth();
-
-  return (
-    <div>
-      <h1>Home</h1>
-      <button type="button" onClick={() => refetchUser()}>
-        refetch user
-      </button>
-    </div>
+    </MainLayout>
   );
 };
 
 export const protectedRoutes = [
   {
-    path: '/home',
+    path: 'home',
     element: <ProtectRoute />,
     children: [
-      { path: '', element: <Home /> },
-      { path: '*', element: <Navigate to="." /> },
+      { path: '', element: <Overview /> },
+      { path: 'buy', element: <BuyRoute /> },
     ],
   },
   {
     path: '*',
-    element: <Navigate to="/home" />,
+    element: <ProtectRest />,
   },
 ];

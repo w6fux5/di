@@ -6,4 +6,4 @@ export * from './routes';
 
 export * from './hooks/useAuth';
 
-export * from './components/LandingLoginForm';
+export * from './components/LoginForm';

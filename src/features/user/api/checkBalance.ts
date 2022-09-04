@@ -3,14 +3,14 @@ import { useQuery } from 'react-query';
 import { axios } from '@/lib/axios';
 import { ExtractFnReturnType, QueryConfig, queryKeys } from '@/lib/react-query';
 
-type CheckBalance = {
+export type CheckBalanceTypes = {
   Real_Balance: number;
   Avb_Balance: number;
   AgtBalance: number;
   Lvl: number;
 };
 
-export const checkBalance = (): Promise<CheckBalance> => {
+export const checkBalance = (): Promise<CheckBalanceTypes> => {
   return axios.get('/ChkBalance.aspx');
 };
 

@@ -1,17 +1,30 @@
 import { Route, Routes } from 'react-router-dom';
 
-import { AuthLayout } from '@/components/Layout';
+import { Loading } from '@/components/Loading';
+import { Error } from '@/features/misc';
+import { usePaymentInfo } from '@/features/user';
 
-import { LoginRoute } from './Login.route';
-import { RegisterRoute } from './Register.route';
+import { LoginRoute } from './LoginRoute';
+
+type ErrorProps = {
+  message: string;
+};
 
 export const AuthRoutes = () => {
-  return (
-    <AuthLayout>
+  const { error, isError, isSuccess } = usePaymentInfo();
+
+  if (isError) {
+    const err = error as ErrorProps;
+    return <Error title={err.message} />;
+  }
+
+  if (isSuccess) {
+    return (
       <Routes>
-        <Route path="login" element={<LoginRoute />} />
-        <Route path="register" element={<RegisterRoute />} />
+        <Route index element={<LoginRoute />} />
       </Routes>
-    </AuthLayout>
-  );
+    );
+  }
+
+  return <Loading />;
 };

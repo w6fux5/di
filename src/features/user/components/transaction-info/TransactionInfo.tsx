@@ -1,40 +1,61 @@
-import { Button } from 'antd';
+import { Button, Empty } from 'antd';
 
-import { useCheckBalance, usePaymentInfo } from '../../api';
+import { CheckBalanceTypes, PaymentInfoTypes } from '../../api';
 
 import styles from './TransactionInfo.module.less';
 
-export const TransactionInfo = () => {
-  const { data: balance } = useCheckBalance();
-  const { data: paymentInfo } = usePaymentInfo();
+interface TransactionInfoProps {
+  goToTrade: (type: 'buy' | 'transfer') => void;
+  balance?: CheckBalanceTypes;
+  paymentInfo?: PaymentInfoTypes;
+  setOpenModal: (isShow: boolean) => void;
+}
 
-  if (!balance || !paymentInfo) {
-    return <h1 style={{ color: 'white' }}>Loading..</h1>;
-  }
+const defaultProps = {
+  balance: null,
+  paymentInfo: null,
+};
 
+export const TransactionInfo = ({
+  goToTrade,
+  balance,
+  paymentInfo,
+  setOpenModal,
+}: TransactionInfoProps) => {
   const agt = balance?.AgtBalance || 0;
   const usdtAmt = paymentInfo?.USDTAmt || 0;
-  const remaining = agt - usdtAmt;
+  const finalBalance = agt - usdtAmt;
+
+  if (!balance || !paymentInfo) {
+    return <Empty description="沒有數據" />;
+  }
 
   return (
     <div style={{ fontSize: '1.2rem' }} className={styles.paymentBlock}>
       <div style={{ marginBottom: '1rem' }} className={styles.paymentBody}>
         <div>可提餘額(USDT)： {balance?.AgtBalance}</div>
         <div>支付數量(USDT)： {paymentInfo?.USDTAmt}</div>
-        <div>結餘(USDT)： {remaining}</div>
+        <div>結餘： {finalBalance}</div>
+        {/* <div>結餘(USDT)： {balance}</div> */}
         <div>訂單成立時間： {paymentInfo?.RequestDate}</div>
         <div>TRC20轉帳地址：</div>
         <div>{paymentInfo?.WalletAddress}</div>
       </div>
 
-      {Math.sign(remaining) === -1 ? (
-        <Button type="primary">餘額不足，前往買幣</Button>
+      {finalBalance < 0 ? (
+        <Button onClick={() => goToTrade('buy')} type="primary">
+          餘額不足，前往買幣
+        </Button>
       ) : (
-        <Button type="primary">送出</Button>
+        <Button onClick={() => setOpenModal(true)} type="primary">
+          送出
+        </Button>
       )}
     </div>
   );
 };
+
+TransactionInfo.defaultProps = defaultProps;
 
 /* <section className={styles.bottom}>
 <div className={`${styles.card} ${styles['card-padding']}`}>
@@ -66,3 +87,18 @@ export const TransactionInfo = () => {
   )}
 </div>
 </section> */
+
+/* <RemindWindow
+        title="交易款項將從您的錢包轉出，請再次確認，確保交易安全。"
+        bodyText={bodyText}
+        visible={showModal}
+        setVisible={setShowModal}
+        confirmClick={() => goToTrade('transfer')}
+        cancel
+      /> */
+
+// const bodyText = [
+//   { id: nanoid(), title: '支付數量(USDT)', content: paymentInfo?.USDTAmt },
+//   { id: nanoid(), title: '結餘(USDT):', content: remaining },
+//   { id: nanoid(), title: '轉帳地址', content: paymentInfo?.WalletAddress },
+// ];
