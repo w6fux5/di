@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -20,7 +21,16 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
+        modifyVars: {
+          // 'primary-color': '#d48806'
+        }
       },
+      scss: {
+        javascriptEnabled: true,
+        modifyVars: {
+          // '$color-primary': '#d48806'
+        }
+      }
     },
   },
 });

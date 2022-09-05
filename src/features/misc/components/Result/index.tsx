@@ -1,18 +1,29 @@
 import { Result as AntdResult, Button } from 'antd';
+import { useState, useEffect } from 'react';
 
 import { useRedirect } from '@/hooks/useRedirect';
 
+type ResultType = '轉帳完成' | '購買完成' | '取消' | '超時' | '申訴';
+type StatusType = 'success' | 'error' | 'warning';
+
 interface ResultProps {
-  type: '完成' | '取消' | '超時' | '申訴';
+  type: ResultType;
   hash: string;
-  status: 'success' | 'error' | 'warning';
+  status: StatusType;
 }
 
 export const Result = ({ type, hash, status }: ResultProps) => {
+  const [showAction, setShowAction] = useState(false);
+
   const { redirect } = useRedirect({ location: '/home' });
-  const successAction = () => {
+
+  const successBuyAction = () => {
     console.log('done');
     redirect();
+  };
+
+  const successTransferAction = () => {
+    console.log('transfer');
   };
 
   const cancelAction = () => {
@@ -27,32 +38,45 @@ export const Result = ({ type, hash, status }: ResultProps) => {
     console.log('appeal');
   };
 
-  const actionHandler = () => {
-    switch (type) {
-      case '完成':
-        return successAction();
-      case '取消':
-        return cancelAction();
-      case '超時':
-        return overTimeAction();
-      case '申訴':
-        return appealAction();
-      default:
-        return '確定';
-    }
-  };
-
   const getBtnText = () => {
     switch (type) {
-      case '完成':
+      case '購買完成':
         return '返回訂單';
       default:
         return '確定';
     }
   };
 
-  const titleEl = <span style={{ color: 'white' }}>{`交易${type}`}</span>;
+  const actionHandler = (resultTyp: ResultType) => {
+    switch (resultTyp) {
+      case '購買完成':
+        return successBuyAction();
+
+      case '轉帳完成':
+        return successTransferAction();
+
+      case '取消':
+        return cancelAction();
+
+      case '超時':
+        return overTimeAction();
+
+      case '申訴':
+        return appealAction();
+      default:
+        return () => {};
+    }
+  };
+
+  useEffect(() => {
+    if (type === '購買完成') {
+      setShowAction(true);
+    }
+  }, [type]);
+
+  const titleEl = <span style={{ color: 'white' }}>{type}</span>;
   const subTitleEl = <span style={{ color: 'white' }}>{`交易回執: ${hash}`}</span>;
+
   return (
     <AntdResult
       style={{ color: 'white' }}
@@ -61,9 +85,11 @@ export const Result = ({ type, hash, status }: ResultProps) => {
       title={titleEl}
       subTitle={subTitleEl}
       extra={
-        <Button onClick={actionHandler} type="primary">
-          {getBtnText()}
-        </Button>
+        showAction && (
+          <Button onClick={() => actionHandler(type)} type="primary">
+            {getBtnText()}
+          </Button>
+        )
       }
     />
   );

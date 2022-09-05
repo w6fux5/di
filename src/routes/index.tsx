@@ -3,14 +3,13 @@ import { useRoutes } from 'react-router-dom';
 import { LandingLayout } from '@/components/Layout';
 import { useAuth } from '@/features/auth';
 import { Landing } from '@/features/misc';
-import { getParamsFromUrl } from '@/utils/urlParse';
 
 import { protectedRoutes } from './protected';
 import { publicRoutes } from './public';
 
 export const AppRoutes = () => {
   const auth = useAuth();
-  const sessionID = getParamsFromUrl('session_id');
+  console.log('appRoute');
 
   const commonRoutes = [
     {
@@ -23,7 +22,7 @@ export const AppRoutes = () => {
     },
   ];
 
-  const routes = auth.user && sessionID ? protectedRoutes : publicRoutes;
+  const routes = auth.user ? protectedRoutes : publicRoutes;
 
   const element = useRoutes([...routes, ...commonRoutes]);
 

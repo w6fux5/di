@@ -5,6 +5,8 @@ import storage from '@/utils/storage';
 
 import { OrderDataTypes, OrderWebSocketResponse } from '../types';
 
+const URL = 'ws_orderstatus.ashx';
+
 export const useBuyWebSocket = () => {
   const [receivedData, setReceivedData] = useState<OrderDataTypes>();
   const [socketUrl, setSocketUrl] = useState('');
@@ -14,7 +16,7 @@ export const useBuyWebSocket = () => {
 
   const changeSocketUrl = useCallback(
     (existsOrderToken: string) => {
-      const url = `ws_orderstatus.ashx?login_session=${userToken}&order_token=${existsOrderToken}`;
+      const url = `${URL}?login_session=${userToken}&order_token=${existsOrderToken}`;
       setSocketUrl(url);
     },
     [userToken],

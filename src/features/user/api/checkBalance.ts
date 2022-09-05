@@ -25,5 +25,7 @@ export const useCheckBalance = ({ config }: CheckBalanceOptions = {}) => {
     ...config,
     queryKey: [queryKeys['check-balance'], '/ChkBalance.aspx'],
     queryFn: () => checkBalance(),
+    staleTime: 0,
+    cacheTime: 0,
   });
 };

@@ -1,33 +1,49 @@
+/**
+ * @URL /home?session_id=1234 => /home/buy?session_id=1234
+ *
+ * @description
+ * 1.判斷 url 是否有 session_id
+ *  a.如果有 session_id 則呼叫payment info api
+ *  b.沒有到話，呼叫 api 會報錯，跳轉到錯誤頁面
+ *
+ * 2.判斷 url 是否有 buy_token
+ *  a.如果頁面一進來，url 已經有 buy_token，跳轉到 <buyRoute>，參考 note.1
+ *  b.如果沒有，則執行下面步驟
+ *
+ * 3.呼叫 api 獲取交易資訊和使用者餘額(useCheckBalance, usePaymentInfo)，
+ *   成功後顯示交易資訊 <TransactionInfo>
+ *
+ * 4.交易確認後，<TransactionInfo> 判斷交易類型 (轉帳 or 購買)
+ *  a.轉帳 => open <TransferConfirm> modal, 點擊確認，call (handleTransfer)，
+ *    執行轉帳，轉帳成功 render <Result>
+ *  b.購買 => call (goToTrade) 跳轉頁面 <buyRoute> /home/buy?session_id=1234
+ *
+ * @note
+ *  1./home?session_id=1234&buy_token=abcd => /home/buy?session_id=1234&buy_token=abcd
+ */
+
 import { useEffect, useCallback, useState } from 'react';
 
 import { Loading } from '@/components/Loading';
 import { TransferConfirm } from '@/features/transfer';
 import { TransactionInfo, useCheckBalance, usePaymentInfo } from '@/features/user';
 import { useRedirect } from '@/hooks/useRedirect';
-import { getParamsFromUrl, ParamsProps, urlParamsKey } from '@/utils/urlParse';
 
 import { useOrderTransfer } from '../../../transfer/api/orderTransfer';
-import { Error } from '../../components/Error';
 import { Result } from '../../components/Result';
 
 type GoToTradeProps = 'buy' | 'transfer';
 
 export const Overview = () => {
-  const { redirect } = useRedirect({ location: '/home' });
+  const { redirect, sessionID, buyOrderToken } = useRedirect({ location: '/home' });
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  const sessionID = getParamsFromUrl(urlParamsKey.session_id as ParamsProps);
-  const buyOrderTokenFromUrl = getParamsFromUrl(urlParamsKey.buy_token as ParamsProps);
-
-  const { data: balance, error: balanceError, isLoading: balanceLoading } = useCheckBalance();
+  // user 餘額
+  const { data: balance, isLoading: balanceLoading } = useCheckBalance();
 
   // 付款資訊 api
-  const {
-    data: paymentInfo,
-    error: paymentInfoError,
-    isLoading: paymentInfoLoading,
-  } = usePaymentInfo();
+  const { data: paymentInfo, isLoading: paymentInfoLoading } = usePaymentInfo();
 
   // 轉帳 api
   const {
@@ -53,21 +69,16 @@ export const Overview = () => {
   };
 
   useEffect(() => {
-    if (!buyOrderTokenFromUrl) return;
+    if (!buyOrderToken) return;
     goToTrade('buy');
-  }, [buyOrderTokenFromUrl, goToTrade]);
+  }, [buyOrderToken, goToTrade]);
 
   if (paymentInfoLoading || balanceLoading) {
     return <Loading />;
   }
 
-  if (!sessionID || paymentInfoError || balanceError) {
-    const message = balanceError || paymentInfoError || 'session 錯誤！';
-    return <Error title={`${message}`} />;
-  }
-
   if (transferData) {
-    return <Result type="完成" hash={transferData.order_token} status="success" />;
+    return <Result type="轉帳完成" hash={transferData.order_token} status="success" />;
   }
 
   return (
@@ -86,7 +97,6 @@ export const Overview = () => {
         paymentInfo={paymentInfo}
         setOpenModal={setOpenModal}
       />
-      {/* <Button onClick={() => setOpenModal((prev) => !prev)}>click</Button> */}
     </>
   );
 };

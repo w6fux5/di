@@ -9,15 +9,17 @@ type MatchingProps = {
 };
 
 const valueStyle = {
-  color: 'rgb(0,0,0,0.45)',
+  color: 'white',
   fontSize: '0.9rem',
 };
 
 export const Matching = ({ price, usdt }: MatchingProps) => {
   return (
     <Result
+      style={{ color: 'white' }}
       icon={<img src={searchIcon} alt="search" />}
-      title="請稍等，現正整合交易者資料"
+      // title="請稍等，現正整合交易者資料"
+      title={<span style={{ ...valueStyle, fontSize: '2rem' }}>請稍等，現正整合交易者資料</span>}
       subTitle={
         <div
           style={{
@@ -29,9 +31,9 @@ export const Matching = ({ price, usdt }: MatchingProps) => {
           }}
         >
           <span style={{ ...valueStyle, lineHeight: 1 }}>購賣訂單</span>
-          <Statistic valueStyle={valueStyle} suffix="USDT" value={usdt} />
-          <SwapOutlined />
-          <Statistic valueStyle={valueStyle} prefix="$" suffix="TWD" value={price} />
+          <Statistic valueStyle={{ ...valueStyle }} suffix="USDT" value={usdt} />
+          <SwapOutlined style={{ ...valueStyle }} />
+          <Statistic valueStyle={{ ...valueStyle }} prefix="$" suffix="TWD" value={price} />
         </div>
       }
     />

@@ -42,11 +42,13 @@ export const TransactionInfo = ({
         <div>{paymentInfo?.WalletAddress}</div>
       </div>
 
-      {finalBalance < 0 ? (
+      {finalBalance < 0 && (
         <Button onClick={() => goToTrade('buy')} type="primary">
           餘額不足，前往買幣
         </Button>
-      ) : (
+      )}
+
+      {finalBalance >= 0 && (
         <Button onClick={() => setOpenModal(true)} type="primary">
           送出
         </Button>

@@ -2,6 +2,7 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 
 import { errorMessage } from '@/config/error-message';
+import { useHttpErrorStore } from '@/stores/httpErrorStore';
 import storage from '@/utils/storage';
 import { getParamsFromUrl } from '@/utils/urlParse';
 
@@ -36,16 +37,18 @@ axios.interceptors.response.use(
   (error) => {
     const message = error.response?.data?.msg || error.message;
     const code = error.response?.data?.code || error.code;
-
     useToast({ type: 'error', code, message });
-
     const customMessage = errorMessage[code];
+    const responseMessage = customMessage || message;
 
-    let responseMessage = customMessage || message;
+    // if (error.response.status >= 500) {
+    //   responseMessage = 'SERVER錯誤';
+    // }
 
-    if (error.response.status >= 500) {
-      responseMessage = 'SERVER 錯誤';
-    }
+    useHttpErrorStore.getState().addHttpError({
+      code,
+      message: responseMessage,
+    });
 
     // return Promise.reject(error);
     return Promise.reject(responseMessage);

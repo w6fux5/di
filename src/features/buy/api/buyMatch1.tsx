@@ -8,7 +8,7 @@ type BuyMatch1Data = {
 };
 
 export type RequestData = {
-  ClientName: string;
+  ClientName: string; // P2 name | P1 account | P3 bankCode
   UsdtAmt: number | undefined;
 };
 

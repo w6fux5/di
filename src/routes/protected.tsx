@@ -10,11 +10,13 @@ const { BuyRoute } = lazyImport(() => import('@/features/buy'), 'BuyRoute');
 const { Overview } = lazyImport(() => import('@/features/misc'), 'Overview');
 
 const ProtectRest = () => {
+  console.log('protect reset');
   useResetUrl('home');
   return <Loading />;
 };
 
 const ProtectRoute = () => {
+  console.log('protect');
   return (
     <MainLayout>
       <Suspense fallback={<Loading />}>

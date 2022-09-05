@@ -10,6 +10,7 @@ type RedirectProps = {
 export const useRedirect = ({ location }: RedirectProps) => {
   const navigate = useNavigate();
   const sessionID = getParamsFromUrl(urlParamsKey.session_id);
+  const buyOrderTokenFromUrl = getParamsFromUrl(urlParamsKey.buy_token);
 
   const redirect = useCallback(
     (params?: 'buy' | 'transfer') => {
@@ -24,5 +25,7 @@ export const useRedirect = ({ location }: RedirectProps) => {
 
   return {
     redirect,
+    sessionID,
+    buyOrderToken: buyOrderTokenFromUrl,
   };
 };

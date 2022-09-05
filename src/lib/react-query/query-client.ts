@@ -3,7 +3,7 @@ import { QueryClient, UseQueryOptions, UseMutationOptions, DefaultOptions } from
 
 const queryConfig: DefaultOptions = {
   queries: {
-    // useErrorBoundary: true,
+    useErrorBoundary: true,
     refetchOnWindowFocus: false,
     retry: false,
   },

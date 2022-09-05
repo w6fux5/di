@@ -6,9 +6,5 @@ export const LoginRoute = () => {
   const onSuccess = () => {
     redirect();
   };
-  return (
-    <div>
-      <LoginForm onSuccess={onSuccess} />
-    </div>
-  );
+  return <LoginForm onSuccess={onSuccess} />;
 };

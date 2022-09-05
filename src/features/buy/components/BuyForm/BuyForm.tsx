@@ -25,7 +25,7 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
   const [selectBankData, setSelectBankData] = useState<string>('');
 
   const [buyMatchData, setBuyMatchData] = useState<RequestData>({
-    ClientName: '',
+    ClientName: '', // P1 Name | P2 account | P3 bankCode
     UsdtAmt: undefined,
   });
 
@@ -34,7 +34,7 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
   const { data: exRateData } = useExRate();
   const {
     refetch,
-    data: orderToken,
+    data: buyOrderToken,
     isLoading,
   } = useBuyMatch1({
     config: { enabled: false },
@@ -88,9 +88,9 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
   }, [bankData]);
 
   useEffect(() => {
-    if (!orderToken) return;
-    onSuccess(orderToken.order_token);
-  }, [orderToken, onSuccess]);
+    if (!buyOrderToken) return;
+    onSuccess(buyOrderToken.order_token);
+  }, [buyOrderToken, onSuccess]);
 
   return (
     <section style={{ padding: '5rem', width: '100%' }}>
