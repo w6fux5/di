@@ -25,17 +25,19 @@
 import { useEffect, useCallback, useState } from 'react';
 
 import { Loading } from '@/components/Loading';
-import { TransferConfirm } from '@/features/transfer';
+import { TransferConfirm, useOrderTransfer } from '@/features/transfer';
 import { TransactionInfo, useCheckBalance, usePaymentInfo } from '@/features/user';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useRedirect } from '@/hooks/useRedirect';
 
-import { useOrderTransfer } from '../../../transfer/api/orderTransfer';
 import { Result } from '../../components/Result';
 
 type GoToTradeProps = 'buy' | 'transfer';
 
 export const Overview = () => {
   const { redirect, sessionID, buyOrderToken } = useRedirect({ location: '/home' });
+
+  const { xs } = useMediaQuery();
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -82,7 +84,7 @@ export const Overview = () => {
   }
 
   return (
-    <div style={{ backgroundColor: '' }}>
+    <div style={{ padding: xs ? '10px' : 0 }}>
       <TransferConfirm
         isOpen={openModal}
         setIsOpen={setOpenModal}

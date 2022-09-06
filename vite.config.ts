@@ -24,6 +24,7 @@ export default defineConfig({
         javascriptEnabled: true,
         modifyVars: {
           // 'primary-color': '#d48806'
+         '@disabled-color': 'fade(#000, 70%);'
         }
       },
       scss: {

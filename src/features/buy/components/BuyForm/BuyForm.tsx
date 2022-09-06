@@ -102,6 +102,7 @@ export const BuyForm = ({ onSuccess, finalBalance }: BuyFormProps) => {
             min={1}
             max={10000}
             disabled
+            formatter={(value) => `₮ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
 
           <SwapOutlined style={{ color: 'white', fontSize: '2rem', transform: 'rotate(90deg)' }} />
@@ -112,6 +113,7 @@ export const BuyForm = ({ onSuccess, finalBalance }: BuyFormProps) => {
             value={twdAmount}
             readOnly
             disabled
+            formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
           />
         </Input.Group>
 

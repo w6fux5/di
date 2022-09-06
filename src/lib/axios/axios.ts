@@ -48,7 +48,6 @@ axios.interceptors.response.use(
       message: responseMessage,
     });
 
-    // return Promise.reject(error);
     return Promise.reject(responseMessage);
   },
 );
