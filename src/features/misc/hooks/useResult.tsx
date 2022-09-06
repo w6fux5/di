@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useRedirect } from '@/hooks/useRedirect';
 
 export type ResultType = '轉帳完成' | '購買完成' | '取消' | '超時' | '申訴中';
@@ -6,9 +8,9 @@ export type StatusType = 'success' | 'error' | 'warning';
 
 export const useResult = (type: ResultType) => {
   const { redirect } = useRedirect({ location: '/home' });
-  const successBuyAction = () => {
+  const successBuyAction = useCallback(() => {
     redirect();
-  };
+  }, [redirect]);
   const successTransferAction = () => {};
   const cancelAction = () => {};
   const overTimeAction = () => {};
@@ -57,12 +59,24 @@ export const useResult = (type: ResultType) => {
     }
   };
 
+  const titleTextHandler = (): string => {
+    switch (type) {
+      case '購買完成':
+        return '購買成功，請點擊返回訂單繼續交易';
+      default:
+        return type;
+    }
+  };
+
   const btnText = btnTextHandler();
   const showAction = checkAction();
+  const titleText = titleTextHandler();
 
   return {
     actionHandler,
     btnText,
     showAction,
+    titleText,
+    successBuyAction,
   };
 };

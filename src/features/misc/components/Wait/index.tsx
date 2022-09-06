@@ -1,4 +1,5 @@
-import { Result as AntdResult } from 'antd';
+import { Result as AntdResult, Alert } from 'antd';
+import Marquee from 'react-fast-marquee';
 
 import img from '@/assets/i_01.png';
 
@@ -15,11 +16,22 @@ export const Wait = ({ hash }: WaitProps) => {
     </div>
   );
   return (
-    <AntdResult
-      icon={<img src={img} alt="已提交" />}
-      status="info"
-      title={titleEl}
-      subTitle={subTitleEl}
-    />
+    <div>
+      <AntdResult
+        icon={<img src={img} alt="已提交" />}
+        status="info"
+        title={titleEl}
+        subTitle={subTitleEl}
+      />
+      <Alert
+        style={{ width: '80%', margin: 'auto' }}
+        banner
+        message={
+          <Marquee pauseOnHover gradient={false}>
+            交易進行中，請勿關閉網頁，否則可能導致交易失敗
+          </Marquee>
+        }
+      />
+    </div>
   );
 };

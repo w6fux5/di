@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useExRate, ExRateDivider, dividerStyles } from '@/features/exRate';
 import { AmountCard } from '@/features/misc';
 import { useBankData, BankDataType, BankDataProps } from '@/features/user';
-import { getIntTotalAmount } from '@/utils/numberFormat';
+import { getIntTotalAmount, thousandthsFormatWithSymbolAndToFixed } from '@/utils/numberFormat';
 
 import { useBuyMatch1, RequestData } from '../../api/buyMatch1';
 
@@ -101,8 +101,9 @@ export const BuyForm = ({ onSuccess, finalBalance }: BuyFormProps) => {
             value={usdtAmount}
             min={1}
             max={10000}
+            precision={2}
             disabled
-            formatter={(value) => `₮ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            formatter={(value) => thousandthsFormatWithSymbolAndToFixed({ value, type: 'usdt' })}
           />
 
           <SwapOutlined style={{ color: 'white', fontSize: '2rem', transform: 'rotate(90deg)' }} />

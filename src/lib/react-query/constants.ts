@@ -11,6 +11,9 @@ export const queryKeys = {
   // Transfer
   'order-transfer': 'order-transfer',
 
-  // exRate
+  // ExRate
   'check-exRate': 'check-exRate',
+
+  // Order
+  'get-order-detail': 'get-order-detail',
 };

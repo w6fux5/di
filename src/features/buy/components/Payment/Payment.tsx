@@ -2,10 +2,10 @@ import { Button, Descriptions, Typography } from 'antd';
 
 import { ExRateDivider } from '@/features/exRate';
 import { AmountCard } from '@/features/misc';
+import { OrderDataTypes } from '@/types/OrderTypes';
 import { getParamsFromUrl, urlParamsKey } from '@/utils/urlParse';
 
 import { useBuyMatch2 } from '../../api/buyMatch2';
-import { OrderDataTypes } from '../../types';
 
 const { Text } = Typography;
 

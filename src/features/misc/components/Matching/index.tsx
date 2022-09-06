@@ -1,5 +1,5 @@
 import { SwapOutlined } from '@ant-design/icons';
-import { Result, Statistic, Button } from 'antd';
+import { Result, Statistic } from 'antd';
 
 import searchIcon from '@/assets/icon_search.gif';
 
@@ -30,15 +30,10 @@ export const Matching = ({ price, usdt }: MatchingProps) => {
           }}
         >
           <span style={{ ...valueStyle, lineHeight: 1 }}>購買訂單</span>
-          <Statistic valueStyle={{ ...valueStyle }} suffix="USDT" value={usdt} />
+          <Statistic precision={2} valueStyle={{ ...valueStyle }} suffix="USDT" value={usdt} />
           <SwapOutlined style={{ ...valueStyle }} />
           <Statistic valueStyle={{ ...valueStyle }} prefix="$" suffix="TWD" value={price} />
         </div>
-      }
-      extra={
-        <Button danger type="primary">
-          取消訂單
-        </Button>
       }
     />
   );

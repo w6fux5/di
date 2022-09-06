@@ -28,6 +28,7 @@ export const AmountCard = ({ twdAmount, usdtAmount }: AmountCardProps) => {
   return (
     <div style={{ ...containerStyle }}>
       <Statistic
+        precision={2}
         title={<span style={{ ...titleStyle }}>數量</span>}
         valueStyle={{ ...valueStyle }}
         value={usdtAmount}
@@ -36,7 +37,8 @@ export const AmountCard = ({ twdAmount, usdtAmount }: AmountCardProps) => {
       <Statistic
         title={<span style={{ ...titleStyle }}>總價</span>}
         valueStyle={{ ...valueStyle }}
-        value={twdAmount}
+        // precision={0}
+        value={twdAmount.toFixed(-0)}
         suffix={<span>TWD</span>}
       />
     </div>

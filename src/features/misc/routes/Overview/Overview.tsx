@@ -35,9 +35,8 @@ import { Result } from '../../components/Result';
 type GoToTradeProps = 'buy' | 'transfer';
 
 export const Overview = () => {
-  const { redirect, sessionID, buyOrderToken } = useRedirect({ location: '/home' });
-
   const { xs } = useMediaQuery();
+  const { redirect, sessionID, buyOrderToken } = useRedirect({ location: '/home' });
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
@@ -80,7 +79,8 @@ export const Overview = () => {
   }
 
   if (transferData) {
-    return <Result type="轉帳完成" hash={transferData.order_token} status="success" />;
+    const { order_token: token } = transferData;
+    return <Result orderToken={token} type="轉帳完成" status="success" />;
   }
 
   return (

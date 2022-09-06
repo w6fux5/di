@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 
 import { useWebsocket } from '@/hooks/useWebsocket';
+import { OrderDataTypes, OrderWebSocketResponse } from '@/types/OrderTypes';
 import storage from '@/utils/storage';
-
-import { OrderDataTypes, OrderWebSocketResponse } from '../types';
 
 const URL = 'ws_orderstatus.ashx';
 

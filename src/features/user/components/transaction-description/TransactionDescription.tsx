@@ -51,7 +51,12 @@ export const TransactionDescription = ({
     >
       {isNumber(balance?.AgtBalance) && (
         <Descriptions.Item label="可提餘額(USDT)">
-          <Statistic valueStyle={{ ...contentCommonStyle }} value={balance?.AgtBalance} />
+          <Statistic
+            precision={2}
+            valueStyle={{ ...contentCommonStyle }}
+            value={balance?.AgtBalance}
+            suffix="₮"
+          />
         </Descriptions.Item>
       )}
 
@@ -59,12 +64,16 @@ export const TransactionDescription = ({
         <Statistic
           valueStyle={{ ...contentCommonStyle, color: '#40a9ff' }}
           value={paymentInfo?.USDTAmt}
+          precision={2}
+          suffix="₮"
         />
       </Descriptions.Item>
 
       {isNumber(finalBalance) && (
-        <Descriptions.Item label="結餘(USDT)">
+        <Descriptions.Item label="支付後結餘(USDT)">
           <Statistic
+            precision={2}
+            suffix="₮"
             valueStyle={{ color: finalBalance && finalBalance < 0 ? '#cf1322' : '#bfbfbf' }}
             value={finalBalance}
           />
