@@ -1,20 +1,19 @@
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { Modal as AntdModal, Space } from 'antd';
 
-import { PaymentInfoTypes, CheckBalanceTypes } from '@/features/user';
+import { TransactionDescription, PaymentInfoTypes, CheckBalanceTypes } from '@/features/user';
 
 type ModalProps = {
   isOpen: boolean;
   setIsOpen: (isShow: boolean) => void;
   balance?: CheckBalanceTypes;
-  paymentInfo?: PaymentInfoTypes;
+  paymentInfo: PaymentInfoTypes;
   handleTransfer: () => void;
   transferLoading: boolean;
 };
 
 const defaultProps = {
   balance: null,
-  paymentInfo: null,
 };
 
 const title = (
@@ -52,13 +51,14 @@ export const TransferConfirm = ({
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={transferLoading}
+      // style={{ backgroundColor: 'red' }}
     >
-      <div>可提餘額(USDT)： {balance?.AgtBalance}</div>
-      <div>支付數量(USDT)： {paymentInfo?.USDTAmt}</div>
-      <div>結餘(USDT)： {finalBalance}</div>
-      <div>訂單成立時間： {paymentInfo?.RequestDate}</div>
-      <div>TRC20轉帳地址：</div>
-      <div>{paymentInfo?.WalletAddress}</div>
+      <TransactionDescription
+        finalBalance={finalBalance}
+        balance={balance}
+        paymentInfo={paymentInfo}
+        light
+      />
     </AntdModal>
   );
 };

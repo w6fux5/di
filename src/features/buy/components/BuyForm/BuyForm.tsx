@@ -1,9 +1,9 @@
 import { SwapOutlined } from '@ant-design/icons';
-import { Row, Col, InputNumber, Input, Button, Space, Select, Statistic } from 'antd';
-import { isNumber } from 'lodash';
+import { InputNumber, Input, Button, Space, Select, Divider } from 'antd';
 import { useState, useEffect } from 'react';
 
-import { useExRate } from '@/features/exRate';
+import { useExRate, ExRateDivider, dividerStyles } from '@/features/exRate';
+import { AmountCard } from '@/features/misc';
 import { useBankData, BankDataType, BankDataProps } from '@/features/user';
 import { getIntTotalAmount } from '@/utils/numberFormat';
 
@@ -13,15 +13,25 @@ const { Option } = Select;
 
 interface BuyFormProps {
   onSuccess: (orderToken: string) => void;
+  finalBalance: number;
 }
 
-export const BuyForm = ({ onSuccess }: BuyFormProps) => {
-  // Init State
-  const [usdtAmount, setUsdtAmount] = useState<number>();
-  const [twdAmount, setTwdAmount] = useState<number>();
+export const BuyForm = ({ onSuccess, finalBalance }: BuyFormProps) => {
+  const { data: bankData } = useBankData();
+
+  const { data: exRateData } = useExRate();
+  const { RMB_BUY: rate } = exRateData || {};
+
+  const [usdtAmount] = useState<number>(Math.abs(finalBalance));
+
+  const amount = getIntTotalAmount({ rate, amount: usdtAmount });
+
+  const [twdAmount] = useState<number>(amount);
+
   const [accountList, setAccountList] = useState<BankDataType>();
+
   const [latestAccount, setLatestAccount] = useState<BankDataProps>(); // 最新的銀行帳號
-  const [showBankForm, setShowBankForm] = useState(false);
+
   const [selectBankData, setSelectBankData] = useState<string>('');
 
   const [buyMatchData, setBuyMatchData] = useState<RequestData>({
@@ -29,9 +39,6 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
     UsdtAmt: undefined,
   });
 
-  // Query State
-  const { data: bankData } = useBankData();
-  const { data: exRateData } = useExRate();
   const {
     refetch,
     data: buyOrderToken,
@@ -40,23 +47,6 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
     config: { enabled: false },
     data: buyMatchData,
   });
-
-  const onChange = (value: number) => {
-    if (!value || !isNumber(value)) {
-      setTwdAmount(undefined);
-      return;
-    }
-    setUsdtAmount(value);
-
-    const { RMB_BUY: rate } = exRateData || {};
-    if (!rate) return;
-    const amount = getIntTotalAmount({ rate, amount: value });
-    setTwdAmount(amount);
-  };
-
-  const showBankFormToggle = () => {
-    setShowBankForm((prev) => !prev);
-  };
 
   const handleChange = ({ value }: { value: string; label: React.ReactNode }) => {
     setSelectBankData(value);
@@ -93,52 +83,45 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
   }, [buyOrderToken, onSuccess]);
 
   return (
-    <section style={{ padding: '5rem', width: '100%' }}>
+    <section style={{ maxWidth: '550px', width: '90%' }}>
+      <ExRateDivider />
       <Space style={{ width: '100%' }} direction="vertical">
-        <Input.Group size="large">
-          <Row gutter={8}>
-            <Col span={10}>
-              <InputNumber
-                style={{ width: '100%' }}
-                addonAfter={<span>USDT</span>}
-                value={usdtAmount}
-                onChange={onChange}
-                min={1}
-                max={10000}
-                onPressEnter={showBankFormToggle}
-                disabled={showBankForm}
-              />
-            </Col>
-            <Col
-              style={{
-                fontSize: '1.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              span={4}
-            >
-              <SwapOutlined style={{ color: 'white' }} />
-            </Col>
-            <Col span={10}>
-              <InputNumber
-                style={{ width: '100%' }}
-                addonAfter={<span>TWD</span>}
-                value={twdAmount}
-                readOnly
-                disabled={showBankForm}
-              />
-            </Col>
-          </Row>
+        <Input.Group
+          size="large"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem',
+          }}
+        >
+          <InputNumber
+            style={{ width: '100%' }}
+            addonAfter={<span>USDT</span>}
+            value={usdtAmount}
+            min={1}
+            max={10000}
+            disabled
+          />
+
+          <SwapOutlined style={{ color: 'white', fontSize: '2rem', transform: 'rotate(90deg)' }} />
+
+          <InputNumber
+            style={{ width: '100%' }}
+            addonAfter={<span>TWD</span>}
+            value={twdAmount}
+            readOnly
+            disabled
+          />
         </Input.Group>
 
-        <Button type="primary" disabled={!usdtAmount || !twdAmount} onClick={showBankFormToggle}>
-          銀行資訊
-        </Button>
+        {latestAccount && (
+          <>
+            <Divider style={{ ...dividerStyles }} orientation="left">
+              選擇銀行帳號
+            </Divider>
 
-        {showBankForm && (
-          <Row gutter={8} style={{ height: '3rem' }}>
-            <Col span={12}>
+            <Space size="large" direction="vertical" style={{ width: '100%' }}>
               <Select
                 defaultValue={{
                   value: latestAccount?.token as string,
@@ -151,33 +134,15 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
                   <Option key={b.token} value={b.token}>{`${b.P2}  ${b.P1}`}</Option>
                 ))}
               </Select>
-            </Col>
-            <Col span={12}>
-              <div
-                style={{
-                  height: '100%',
-                  border: '1px solid blue',
-                  padding: '5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Statistic
-                  title={<span style={{ color: 'white' }}>數量</span>}
-                  valueStyle={{ color: 'white' }}
-                  value={twdAmount}
-                  suffix={<span>USDT</span>}
-                />
-                <Statistic
-                  title={<span style={{ color: 'white' }}>總價</span>}
-                  valueStyle={{ color: 'white' }}
-                  value={usdtAmount}
-                  suffix={<span>TWD</span>}
-                />
-              </div>
-            </Col>
-            <Col span={12} style={{ margin: 'auto', height: '3rem', marginTop: '3rem' }}>
+
+              <Divider style={{ ...dividerStyles }} orientation="left">
+                總計
+              </Divider>
+
+              {twdAmount && usdtAmount && (
+                <AmountCard twdAmount={twdAmount} usdtAmount={usdtAmount} />
+              )}
+
               <Button
                 style={{ width: '100%', height: '100%' }}
                 type="primary"
@@ -186,8 +151,8 @@ export const BuyForm = ({ onSuccess }: BuyFormProps) => {
               >
                 開始配對
               </Button>
-            </Col>
-          </Row>
+            </Space>
+          </>
         )}
       </Space>
     </section>

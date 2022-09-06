@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getParamsFromUrl, urlParamsKey } from '../utils/urlParse';
@@ -9,23 +9,27 @@ type RedirectProps = {
 
 export const useRedirect = ({ location }: RedirectProps) => {
   const navigate = useNavigate();
-  const sessionID = getParamsFromUrl(urlParamsKey.session_id);
-  const buyOrderTokenFromUrl = getParamsFromUrl(urlParamsKey.buy_token);
+  const [sessionIDFromUrl, setSessionId] = useState(getParamsFromUrl(urlParamsKey.session_id));
+  const [buyOrderTokenFromUrl, setBuyOrderTokenFromUrl] = useState(
+    getParamsFromUrl(urlParamsKey.buy_token),
+  );
 
   const redirect = useCallback(
     (params?: 'buy' | 'transfer') => {
       if (params) {
-        navigate(`${location}/${params}?${urlParamsKey.session_id}=${sessionID}`);
+        navigate(`${location}/${params}?${urlParamsKey.session_id}=${sessionIDFromUrl}`);
       } else {
-        navigate(`${location}?${urlParamsKey.session_id}=${sessionID}`);
+        navigate(`${location}?${urlParamsKey.session_id}=${sessionIDFromUrl}`);
       }
     },
-    [sessionID, location, navigate],
+    [sessionIDFromUrl, location, navigate],
   );
 
   return {
     redirect,
-    sessionID,
+    sessionID: sessionIDFromUrl,
     buyOrderToken: buyOrderTokenFromUrl,
+    setSessionId,
+    setBuyOrderTokenFromUrl,
   };
 };

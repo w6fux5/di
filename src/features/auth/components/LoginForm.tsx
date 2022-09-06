@@ -1,6 +1,6 @@
-// import { createBreakpoint } from 'react-use';
 import { Button, Form, Input } from 'antd';
 
+import { useMediaQuery } from '../../../hooks/useMediaQuery';
 import { LoginCredentialsDTO } from '../api/Login';
 import { useAuth } from '../hooks/useAuth';
 
@@ -11,15 +11,24 @@ type LoginFormProps = {
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { login, isLoggingIn } = useAuth();
 
+  const { md } = useMediaQuery();
+
   const onFinish = async (values: LoginCredentialsDTO) => {
     await login(values);
     onSuccess();
   };
 
   return (
-    <>
-      <Form name="horizontal_login" layout="inline" onFinish={onFinish}>
-        <Form.Item name="Login_tel" rules={[{ required: true, message: '請輸入手機號碼!' }]}>
+    <section>
+      <Form name="horizontal_login" layout={md ? 'vertical' : 'inline'} onFinish={onFinish}>
+        <Form.Item
+          getValueFromEvent={(e: any) => {
+            const { value } = e.target;
+            return value.replace(/[^\d{1,}.\d{1,}|\d{1,}]/g, '');
+          }}
+          name="Login_tel"
+          rules={[{ required: true, message: '請輸入手機號碼!' }]}
+        >
           <Input placeholder="請輸入手機號碼" />
         </Form.Item>
 
@@ -34,10 +43,10 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         </Form.Item>
       </Form>
 
-      <Button style={{ padding: 0 }} type="link" href="https://www.88u.asia/#/auth/register">
+      <a style={{ fontSize: '1rem' }} href="https://www.88u.asia/#/auth/register">
         還沒有帳號？現在去註冊
-      </Button>
-    </>
+      </a>
+    </section>
   );
 };
 

@@ -6,6 +6,7 @@ import { resolve } from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/di',
   server: {
     proxy: {
       '/j': 'https://www.88u.asia',

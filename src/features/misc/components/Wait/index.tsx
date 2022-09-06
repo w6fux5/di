@@ -7,12 +7,11 @@ interface WaitProps {
 }
 
 export const Wait = ({ hash }: WaitProps) => {
-  const titleEl = <span style={{ color: 'white' }}>已提交</span>;
+  const titleEl = <span style={{ color: 'white', fontSize: '1.5rem' }}>等待對方確認收款</span>;
 
   const subTitleEl = (
-    <div style={{ color: 'white' }}>
-      <p>{`交易回執: ${hash}`}</p>
-      <p>交易成功後，數字貨幣預計15～30分鐘到達分鐘到達你的錢包地址</p>
+    <div style={{ color: '#bfbfbf', fontSize: '0.8rem' }}>
+      <span>{`交易回執: ${hash}`}</span>
     </div>
   );
   return (

@@ -73,7 +73,7 @@ export const Overview = () => {
     goToTrade('buy');
   }, [buyOrderToken, goToTrade]);
 
-  if (paymentInfoLoading || balanceLoading) {
+  if (paymentInfoLoading || balanceLoading || !paymentInfo) {
     return <Loading />;
   }
 
@@ -82,7 +82,7 @@ export const Overview = () => {
   }
 
   return (
-    <>
+    <div style={{ backgroundColor: '' }}>
       <TransferConfirm
         isOpen={openModal}
         setIsOpen={setOpenModal}
@@ -97,6 +97,6 @@ export const Overview = () => {
         paymentInfo={paymentInfo}
         setOpenModal={setOpenModal}
       />
-    </>
+    </div>
   );
 };

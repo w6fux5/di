@@ -9,7 +9,6 @@ import { publicRoutes } from './public';
 
 export const AppRoutes = () => {
   const auth = useAuth();
-  console.log('appRoute');
 
   const commonRoutes = [
     {
@@ -24,7 +23,7 @@ export const AppRoutes = () => {
 
   const routes = auth.user ? protectedRoutes : publicRoutes;
 
-  const element = useRoutes([...routes, ...commonRoutes]);
+  const element = useRoutes([...commonRoutes, ...routes]);
 
   return element;
 };

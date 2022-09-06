@@ -18,7 +18,7 @@ export const useHttpErrorStore = create<HttpErrorStore>((set) => ({
 
   addHttpError: (httpError) =>
     set((state) => ({
-      httpErrors: [...state.httpErrors, { id: nanoid(), ...httpError }],
+      httpErrors: [{ id: nanoid(), ...httpError }, ...state.httpErrors],
     })),
 
   dismissHttpError: (id) =>

@@ -17,17 +17,24 @@
 import { useCallback, useEffect } from 'react';
 
 import { Loading } from '@/components/Loading';
+import { useExRate } from '@/features/exRate';
 import { Matching, Result, Wait } from '@/features/misc';
+import { useBankData, useCheckBalance, usePaymentInfo } from '@/features/user';
 import { useResetUrl } from '@/hooks/useResetUrl';
 
-import { useExRate } from '../../exRate/api/checkExRate';
-import { useBankData } from '../../user/api/getBankData';
 import { BuyForm, Payment } from '../components';
 import { useBuyWebSocket } from '../hooks/useBuyWebSocket';
 
 export const Buy = () => {
   const { changeSocketUrl, receivedData, connectionStatus } = useBuyWebSocket();
   const { setOrderToken, orderToken } = useResetUrl('home/buy');
+
+  const { data: balance } = useCheckBalance();
+  const { data: paymentInfo } = usePaymentInfo();
+
+  const agt = balance?.AgtBalance || 0;
+  const usdtAmt = paymentInfo?.USDTAmt || 0;
+  const finalBalance = balance ? agt - usdtAmt : undefined;
 
   const { data: bankData } = useBankData();
   const { data: exRateData } = useExRate();
@@ -39,8 +46,6 @@ export const Buy = () => {
     },
     [setOrderToken, changeSocketUrl],
   );
-
-  console.log(receivedData);
 
   useEffect(() => {
     if (!orderToken) return;
@@ -61,13 +66,20 @@ export const Buy = () => {
         {statusID === 1 && <Result status="success" type="購買完成" hash={hash} />}
         {statusID === 98 && <Result status="error" type="超時" hash={hash} />}
         {statusID === 99 && <Result status="error" type="取消" hash={hash} />}
-        {statusID === 35 && <Result status="warning" type="申訴" hash={hash} />}
+        {statusID === 35 && <Result status="warning" type="申訴中" hash={hash} />}
       </div>
     );
   }
 
-  if (exRateData && bankData && connectionStatus !== 'Connecting') {
-    return <BuyForm onSuccess={onSuccess} />;
+  if (
+    finalBalance !== undefined &&
+    balance &&
+    paymentInfo &&
+    exRateData &&
+    bankData &&
+    connectionStatus !== 'Connecting'
+  ) {
+    return <BuyForm finalBalance={finalBalance} onSuccess={onSuccess} />;
   }
 
   return <Loading />;

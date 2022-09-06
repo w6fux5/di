@@ -4,3 +4,4 @@ export * from './components/Result';
 export * from './components/Wait';
 export * from './components/Error';
 export * from './components/Matching';
+export * from './components/AmountCard';

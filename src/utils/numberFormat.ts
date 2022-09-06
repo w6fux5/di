@@ -6,11 +6,13 @@ export const getIntNumber = (value: string | number): number => {
 };
 
 type GetIntTotalAmountProps = {
-  rate: string | number;
+  rate: string | undefined;
   amount: string | number;
 };
 
 export const getIntTotalAmount = ({ rate, amount }: GetIntTotalAmountProps): number => {
+  if (!rate) return NaN;
+
   const rateNum = getIntNumber(rate);
   const amountNum = getIntNumber(amount);
   const total = rateNum * amountNum;

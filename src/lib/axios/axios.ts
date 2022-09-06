@@ -4,9 +4,7 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import { errorMessage } from '@/config/error-message';
 import { useHttpErrorStore } from '@/stores/httpErrorStore';
 import storage from '@/utils/storage';
-import { getParamsFromUrl } from '@/utils/urlParse';
-
-import { useToast } from '../toast';
+import { getParamsFromUrl, urlParamsKey } from '@/utils/urlParse';
 
 const authRequestInterceptor = (config: AxiosRequestConfig) => {
   const userToken = storage.getToken();
@@ -15,7 +13,7 @@ const authRequestInterceptor = (config: AxiosRequestConfig) => {
     config.headers.Accept = 'application/json';
   }
 
-  const sessionID = getParamsFromUrl('session_id');
+  const sessionID = getParamsFromUrl(urlParamsKey.session_id);
 
   if (sessionID && config?.headers) {
     config.headers.dp_order = sessionID;
@@ -37,13 +35,13 @@ axios.interceptors.response.use(
   (error) => {
     const message = error.response?.data?.msg || error.message;
     const code = error.response?.data?.code || error.code;
-    useToast({ type: 'error', code, message });
+
     const customMessage = errorMessage[code];
     const responseMessage = customMessage || message;
 
-    // if (error.response.status >= 500) {
-    //   responseMessage = 'SERVER錯誤';
-    // }
+    if (code === '10') {
+      alert(responseMessage);
+    }
 
     useHttpErrorStore.getState().addHttpError({
       code,

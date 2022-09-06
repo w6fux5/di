@@ -7,6 +7,7 @@ export const urlParamsKey = {
 };
 
 export const getParamsFromUrl = (params: string): string => {
-  const searchParams = new URLSearchParams(window.location.search);
+  const str = `?${window.location.hash.split('?')[1]}`;
+  const searchParams = new URLSearchParams(str);
   return searchParams.get(params) || '';
 };

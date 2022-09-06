@@ -1,19 +1,21 @@
-import { Button, Empty } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Empty, Space } from 'antd';
 
 import { CheckBalanceTypes, PaymentInfoTypes } from '../../api';
-
-import styles from './TransactionInfo.module.less';
+import { TransactionDescription } from '../transaction-description/TransactionDescription';
 
 interface TransactionInfoProps {
-  goToTrade: (type: 'buy' | 'transfer') => void;
+  goToTrade?: (type: 'buy' | 'transfer') => void;
   balance?: CheckBalanceTypes;
   paymentInfo?: PaymentInfoTypes;
-  setOpenModal: (isShow: boolean) => void;
+  setOpenModal?: (isShow: boolean) => void;
 }
 
 const defaultProps = {
   balance: null,
   paymentInfo: null,
+  goToTrade: () => {},
+  setOpenModal: () => {},
 };
 
 export const TransactionInfo = ({
@@ -24,35 +26,41 @@ export const TransactionInfo = ({
 }: TransactionInfoProps) => {
   const agt = balance?.AgtBalance || 0;
   const usdtAmt = paymentInfo?.USDTAmt || 0;
-  const finalBalance = agt - usdtAmt;
+  const finalBalance = balance ? agt - usdtAmt : undefined;
 
-  if (!balance || !paymentInfo) {
+  if (!balance && !paymentInfo) {
     return <Empty description="沒有數據" />;
   }
 
   return (
-    <div style={{ fontSize: '1.2rem' }} className={styles.paymentBlock}>
-      <div style={{ marginBottom: '1rem' }} className={styles.paymentBody}>
-        <div>可提餘額(USDT)： {balance?.AgtBalance}</div>
-        <div>支付數量(USDT)： {paymentInfo?.USDTAmt}</div>
-        <div>結餘： {finalBalance}</div>
-        {/* <div>結餘(USDT)： {balance}</div> */}
-        <div>訂單成立時間： {paymentInfo?.RequestDate}</div>
-        <div>TRC20轉帳地址：</div>
-        <div>{paymentInfo?.WalletAddress}</div>
+    <div style={{ maxWidth: '450px', padding: '2rem' }}>
+      {paymentInfo && (
+        <TransactionDescription
+          balance={balance}
+          paymentInfo={paymentInfo}
+          finalBalance={finalBalance}
+        />
+      )}
+
+      <Space style={{ margin: '1rem 0' }}>
+        <InfoCircleOutlined style={{ color: '#ffc53d' }} />
+        <span style={{ color: '#ffc53d', fontSize: '8px' }}>
+          請在有效時限內完成交易，如訂單失效，請重新申請支付。
+        </span>
+      </Space>
+
+      <div style={{ textAlign: 'left' }}>
+        {goToTrade && finalBalance !== undefined && finalBalance < 0 && (
+          <Button block danger onClick={() => goToTrade('buy')} type="primary">
+            餘額不足，前往買幣
+          </Button>
+        )}
+        {setOpenModal && finalBalance !== undefined && finalBalance >= 0 && (
+          <Button block onClick={() => setOpenModal(true)} type="primary">
+            送出
+          </Button>
+        )}
       </div>
-
-      {finalBalance < 0 && (
-        <Button onClick={() => goToTrade('buy')} type="primary">
-          餘額不足，前往買幣
-        </Button>
-      )}
-
-      {finalBalance >= 0 && (
-        <Button onClick={() => setOpenModal(true)} type="primary">
-          送出
-        </Button>
-      )}
     </div>
   );
 };
