@@ -40,11 +40,13 @@ export const Overview = () => {
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
-  // user 餘額
+  // user 餘額 api
   const { data: balance, isLoading: balanceLoading } = useCheckBalance();
 
   // 付款資訊 api
-  const { data: paymentInfo, isLoading: paymentInfoLoading } = usePaymentInfo();
+  const { data: paymentInfo, isLoading: paymentInfoLoading } = usePaymentInfo({
+    config: { cacheTime: 0, staleTime: 0 },
+  });
 
   // 轉帳 api
   const {

@@ -1,5 +1,6 @@
 import { Result as AntdResult, Button } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import { Loading } from '@/components/Loading';
 import { useGetOrderDetail } from '@/features/order';
@@ -23,6 +24,8 @@ const subTitleStyles = { color: '#bfbfbf', fontSize: '0.8rem' };
 
 export const Result = ({ type, hash, status, orderToken }: ResultProps) => {
   const { actionHandler, btnText, showAction, titleText, successBuyAction } = useResult(type);
+
+  const [show, setShow] = useState(false);
 
   const { data: orderDetailData, isLoading } = useGetOrderDetail({
     config: { enabled: !!orderToken },
@@ -49,18 +52,26 @@ export const Result = ({ type, hash, status, orderToken }: ResultProps) => {
     }
   }, [type, successBuyAction]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShow(true);
+    }, 50);
+  }, []);
+
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <AntdResult
-      status={status}
-      // title={}
-      title={titleEl}
-      subTitle={subTitleEl}
-      extra={showAction && btnEl}
-    />
+    <CSSTransition in={show} timeout={1000} classNames="animation" unmountOnExit>
+      <AntdResult
+        status={status}
+        // title={}
+        title={titleEl}
+        subTitle={subTitleEl}
+        extra={showAction && btnEl}
+      />
+    </CSSTransition>
   );
 };
 

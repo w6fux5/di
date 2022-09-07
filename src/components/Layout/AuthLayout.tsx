@@ -13,7 +13,7 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
   const { width, height } = useWindowSize();
 
   return (
-    <main style={{ width, height }} className={styles.container}>
+    <section id="auth-layout" style={{ width, height }} className={styles.container}>
       <div className={styles.content}>
         <img className={styles.logo} src={logo} alt="88u logo" />
 
@@ -23,6 +23,6 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
 
         {children}
       </div>
-    </main>
+    </section>
   );
 };

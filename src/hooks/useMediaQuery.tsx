@@ -12,6 +12,7 @@ import { useMedia } from 'react-use';
  */
 
 export const useMediaQuery = () => {
+  const xxs = useMedia('(max-width: 330px)');
   const xs = useMedia('(max-width: 480px)');
   const sm = useMedia('(max-width: 576px)');
   const md = useMedia('(max-width: 768px)');
@@ -19,6 +20,7 @@ export const useMediaQuery = () => {
   const xl = useMedia('(max-width: 1200px)');
   const xxl = useMedia('max-width: 1600px)');
   return {
+    xxs,
     xs,
     sm,
     md,

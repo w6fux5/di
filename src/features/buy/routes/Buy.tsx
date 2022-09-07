@@ -30,7 +30,7 @@ export const Buy = () => {
   const { setOrderToken, orderToken } = useResetUrl('home/buy');
 
   const { data: balance } = useCheckBalance();
-  const { data: paymentInfo } = usePaymentInfo();
+  const { data: paymentInfo } = usePaymentInfo({ config: { cacheTime: 0 } });
 
   const agt = balance?.AgtBalance || 0;
   const usdtAmt = paymentInfo?.USDTAmt || 0;
@@ -56,6 +56,14 @@ export const Buy = () => {
     alert('目前還沒有帳號通過實名驗證');
   }
 
+  const showForm =
+    finalBalance !== undefined &&
+    balance &&
+    paymentInfo &&
+    exRateData &&
+    bankData &&
+    connectionStatus !== 'Connecting';
+
   if (receivedData) {
     const { Order_StatusID: statusID, Tx_HASH: hash, UsdtAmt: usdt, D2: price } = receivedData;
     return (
@@ -71,14 +79,7 @@ export const Buy = () => {
     );
   }
 
-  if (
-    finalBalance !== undefined &&
-    balance &&
-    paymentInfo &&
-    exRateData &&
-    bankData &&
-    connectionStatus !== 'Connecting'
-  ) {
+  if (showForm) {
     return <BuyForm finalBalance={finalBalance} onSuccess={onSuccess} />;
   }
 

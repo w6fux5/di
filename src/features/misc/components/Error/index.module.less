@@ -1,5 +1,5 @@
 .container {
-  background-image: url('../../../../assets/88u_bg.png');
+  background-image: url('../../../../assets/88u_bg.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -9,7 +9,11 @@
     background-color: #f2f2f2;
     border-radius: 1rem;
     width: 35%;
-    min-width: 15rem;
+    min-width: 20rem;
     margin: auto;
+
+    @media only screen and(max-width: 330px) {
+      min-width: 100vw;
+    }
   }
 }

@@ -11,8 +11,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const { width, height } = useWindowSize();
 
   return (
-    <div style={{ width, height }} className={styles.container}>
+    <main id="main-layout" style={{ width, height }} className={styles.container}>
       {children}
-    </div>
+    </main>
   );
 };

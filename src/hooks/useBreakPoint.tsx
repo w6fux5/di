@@ -12,6 +12,7 @@ import { createBreakpoint } from 'react-use';
 
 export const useBreakPoint = () => {
   const breakPointFn = createBreakpoint({
+    xxs: 330,
     xs: 480,
     sm: 576,
     md: 768,
