@@ -1,13 +1,13 @@
+import { isArray } from 'lodash';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
 
+import { AuthUser } from '@/features/auth';
 import { useWebsocket } from '@/hooks';
 import { getParamsFromUrl, urlParamsKey } from '@/utils/urlParse';
 
-const ROOT_URL = '';
-
-// /ws_ChatOrder3.ashx
-// ?login_session=1234&order_token=abcd
+const BASE_URL = 'wss://chat.88u.asia';
+const URL = `WS_ChatOrder.ashx`;
 
 type MessageType = {
   Message: string;
@@ -19,22 +19,45 @@ type MessageType = {
   id: string;
 };
 
-export const useChatWidgetSocket = () => {
-  const sessionID = getParamsFromUrl(urlParamsKey.session_id);
+type UseChatWidgetSocketProps = {
+  user: AuthUser;
+};
+
+export const useChatWidgetSocket = ({ user }: UseChatWidgetSocketProps) => {
   const buyOrderToken = getParamsFromUrl(urlParamsKey.buy_token);
-  const url = `${ROOT_URL}?session_id=${sessionID}&order_token=${buyOrderToken}`;
+  const url = `${URL}?login_session=${user}&order_token=${buyOrderToken}`;
 
   const [messageList, setMessageList] = useState<MessageType[]>([]);
 
   const options = {
     onMessage: (message: WebSocketEventMap['message']) => {
-      const dataFromServer = JSON.parse(message.data);
-      if (dataFromServer.token !== buyOrderToken) return;
-      setMessageList((prev) => [...prev, { ...dataFromServer, id: nanoid() }]);
+      const dataFromServer = JSON.parse(message?.data);
+      if (isArray(dataFromServer)) {
+        setMessageList(dataFromServer);
+      } else {
+        setMessageList((prev) => [...prev, { ...dataFromServer, id: nanoid() }]);
+      }
     },
   };
 
-  const { sendText, sendImg } = useWebsocket({ url, options });
+  const { sendMessage } = useWebsocket({ url, options, BASE_URL });
+
+  const sendText = (value: string) => {
+    const message = JSON.stringify({
+      Message_Type: 1,
+      Message: value.toString(),
+    });
+
+    sendMessage(message);
+  };
+
+  const sendImg = async (image: string) => {
+    const imageMessage = JSON.stringify({
+      Message_Type: 2,
+      Message: image,
+    });
+    sendMessage(imageMessage);
+  };
 
   return {
     messageList,

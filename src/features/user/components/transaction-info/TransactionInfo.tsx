@@ -45,7 +45,7 @@ export const TransactionInfo = ({
       <Space style={{ margin: '1rem 0' }}>
         <InfoCircleOutlined style={{ color: '#ffc53d', fontSize: '1rem' }} />
         <span style={{ color: '#ffc53d', fontSize: '8px' }}>
-          請在有效時限內完成交易，如訂單失效，請重新申請支付。
+          此訂單有效時限為2小時，請在有效時限內完成交易，如訂單失效，請重新申請支付。
         </span>
       </Space>
 

@@ -1,13 +1,15 @@
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
-const BASE_URL = 'wss://www.88u.asia/j';
+const DEFAULT_URL = 'wss://www.88u.asia/j';
 
 type Websocket = {
   url: string;
   options?: any;
+  BASE_URL?: string;
 };
 
-export const useWebsocket = ({ url, options }: Websocket) => {
+export const useWebsocket = ({ url, options, BASE_URL = DEFAULT_URL }: Websocket) => {
+  console.log(url);
   const { readyState, sendMessage, lastJsonMessage } = useWebSocket(`${BASE_URL}/${url}`, {
     ...options,
     onError: (error) => {
@@ -26,37 +28,5 @@ export const useWebsocket = ({ url, options }: Websocket) => {
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
   }[readyState];
 
-  const sendText = (value: string, orderToken: string) => {
-    if (value === '' || !orderToken) {
-      alert('沒有token');
-      return;
-    }
-
-    sendMessage(
-      JSON.stringify({
-        Message_Type: 1,
-        Message: value.toString(),
-        token: orderToken,
-      }),
-    );
-  };
-  const sendImg = async (image: string, token: string) => {
-    if (!image || !token) {
-      return;
-    }
-
-    try {
-      sendMessage(
-        JSON.stringify({
-          Message_Type: 2,
-          Message: image,
-          token,
-        }),
-      );
-    } catch (error) {
-      alert(error);
-    }
-  };
-
-  return { connectionStatus, sendText, sendImg, lastJsonMessage };
+  return { connectionStatus, sendMessage, lastJsonMessage };
 };

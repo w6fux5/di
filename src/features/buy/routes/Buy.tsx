@@ -14,9 +14,12 @@
  * 1.webSocket 一進來就會嘗試連線，url 為空字串，拿到buy order token 更改 url，才能成功連線
  */
 
+import { message } from 'antd';
 import { useCallback, useEffect } from 'react';
 
 import { Loading } from '@/components/Loading';
+import { useAuth } from '@/features/auth';
+import { ChatWidget } from '@/features/chatWidget';
 import { useExRate } from '@/features/exRate';
 import { Matching, Result, Wait } from '@/features/misc';
 import { useBankData, useCheckBalance, usePaymentInfo } from '@/features/user';
@@ -26,6 +29,8 @@ import { BuyForm, Payment } from '../components';
 import { useBuyWebSocket } from '../hooks/useBuyWebSocket';
 
 export const Buy = () => {
+  const { user } = useAuth();
+
   const { changeSocketUrl, receivedData, connectionStatus } = useBuyWebSocket();
   const { setOrderToken, orderToken } = useResetUrl('home/buy');
 
@@ -53,7 +58,7 @@ export const Buy = () => {
   }, [orderToken, changeSocketUrl]);
 
   if (bankData && !bankData.some((el) => el.User_BankStatus === 101)) {
-    alert('目前還沒有帳號通過實名驗證');
+    message.error('目前還沒有實名驗證');
   }
 
   const showForm =
@@ -75,6 +80,7 @@ export const Buy = () => {
         {statusID === 98 && <Result status="error" type="超時" hash={hash} />}
         {statusID === 99 && <Result status="error" type="取消" hash={hash} />}
         {statusID === 35 && <Result status="warning" type="申訴中" hash={hash} />}
+        {user && <ChatWidget user={user} />}
       </div>
     );
   }

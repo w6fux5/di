@@ -8,23 +8,25 @@ import {
   ConversationHeader,
   Avatar,
 } from '@chatscope/chat-ui-kit-react';
-import { Button } from 'antd';
+import { Button, Image } from 'antd';
 import { ChangeEvent, useRef, useState } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 
 import { resizeFile } from '@/utils/image-resize';
 
+import { AuthUser } from '../auth';
+
 import styles from './ChatWidget.module.less';
 import { useChatWidgetSocket } from './hooks/useChatWidgetSocket';
 
-const arr = new Array(20).fill(null);
+type ChatWidgetProps = {
+  user: AuthUser;
+};
 
-export const ChatWidget = () => {
+export const ChatWidget = ({ user }: ChatWidgetProps) => {
   const [showWidget, setShowWidget] = useState<boolean>(false);
-  // const [pending, startTransition] = useTransition();
 
-  const { messageList, sendImg, sendText, buyOrderToken } = useChatWidgetSocket();
-  console.log(messageList);
+  const { messageList, sendImg, sendText } = useChatWidgetSocket({ user });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -38,77 +40,108 @@ export const ChatWidget = () => {
     if (!target.files) return;
     const originImage = target?.files[0];
     const image = (await resizeFile(originImage)) as string;
-    sendImg(image, buyOrderToken);
+    sendImg(image);
   };
 
   // send text
   const onSend = (message: string) => {
-    sendText(message, buyOrderToken);
+    sendText(message);
   };
+
   return (
-    <section className={styles.container}>
-      {showWidget && (
-        <>
-          <ConversationHeader style={{ borderRadius: '5px 5px 0 0' }}>
-            <ConversationHeader.Content userName={<span style={{}}>CHAT</span>} />
-            <ConversationHeader.Actions>
-              <CloseCircleOutlined
-                onClick={() => setShowWidget(false)}
-                style={{ fontSize: '1.5rem', cursor: 'pointer' }}
-              />
-            </ConversationHeader.Actions>
-          </ConversationHeader>
-          <MainContainer style={{ borderRadius: '0 0 5px 5px' }}>
-            <ChatContainer>
-              <MessageList>
-                {arr.map(() => (
-                  <Message
-                    model={{
-                      direction: Math.random() > 0.5 ? 'outgoing' : 'incoming',
-                      position: 'last',
-                    }}
-                  >
-                    <Avatar src="https://picsum.photos/200/300" />
-                    <Message.TextContent>
-                      <span style={{}}>test</span>
-                      {/* <span style={{ color: '#EF7C8E' }}>test</span> */}
-                      {/* <span style={{ color: '#FAE8E0' }}>test</span> */}
-                    </Message.TextContent>
-                    <Message.Footer style={{ color: '#d9d9d9' }}>08:30</Message.Footer>
-                  </Message>
-                ))}
-              </MessageList>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '5rem',
+        right: '3rem',
+        height: '30rem',
+        width: '320px',
+      }}
+    >
+      <section className={styles.container}>
+        {showWidget && (
+          <>
+            <ConversationHeader style={{ borderRadius: '5px 5px 0 0' }}>
+              <ConversationHeader.Content userName={<span style={{}}>CHAT</span>} />
+              <ConversationHeader.Actions>
+                <CloseCircleOutlined
+                  onClick={() => setShowWidget(false)}
+                  style={{ fontSize: '1.5rem', cursor: 'pointer' }}
+                />
+              </ConversationHeader.Actions>
+            </ConversationHeader>
+            <MainContainer style={{ borderRadius: '0 0 5px 5px' }}>
+              <ChatContainer>
+                <MessageList>
+                  {messageList.map((message) => {
+                    const {
+                      Message: msg,
+                      Sysdate,
+                      Message_Role: role,
+                      Message_Type: messageType,
+                      id,
+                    } = message;
 
-              <MessageInput
-                onSend={onSend}
-                onAttachClick={attachClickHandler}
-                placeholder="Type message here"
-              />
-            </ChatContainer>
-          </MainContainer>
-          <input
-            style={{ display: 'none' }}
-            ref={inputRef}
-            type="file"
-            onChange={imgChangeHandler}
-          />
-        </>
-      )}
+                    console.log(id);
 
-      <Button
-        onClick={() => {
-          setShowWidget(true);
+                    const direction = role === 1 ? 'outgoing' : 'incoming';
+                    const timer = Sysdate.split(' ')[1].split(':').slice(0, -1).join(':');
 
-          // startTransition(() => {
-          //   setShowWidget(true);
-          // });
-        }}
-        className={styles.button}
-        shape="round"
-        type="primary"
-      >
-        Message
-      </Button>
-    </section>
+                    if (messageType === 2) {
+                      return (
+                        <Message type="custom" key={id} model={{ direction, position: 'last' }}>
+                          <Message.CustomContent>
+                            <Image width={120} src={msg} />
+                          </Message.CustomContent>
+                          <Avatar src="https://picsum.photos/200/300" />
+                          <Message.Footer sentTime={timer} />
+                        </Message>
+                      );
+                    }
+
+                    return (
+                      <Message
+                        key={id}
+                        model={{
+                          direction,
+                          position: 'last',
+                        }}
+                      >
+                        <Avatar src="https://picsum.photos/200/300" />
+                        <Message.TextContent>{msg}</Message.TextContent>
+                        <Message.Footer style={{ color: '#d9d9d9' }}>{timer}</Message.Footer>
+                      </Message>
+                    );
+                  })}
+                </MessageList>
+
+                <MessageInput
+                  onSend={onSend}
+                  onAttachClick={attachClickHandler}
+                  placeholder="Type message here"
+                />
+              </ChatContainer>
+            </MainContainer>
+            <input
+              style={{ display: 'none' }}
+              ref={inputRef}
+              type="file"
+              onChange={imgChangeHandler}
+            />
+          </>
+        )}
+
+        <Button
+          onClick={() => {
+            setShowWidget(true);
+          }}
+          className={styles.button}
+          shape="round"
+          type="primary"
+        >
+          Message
+        </Button>
+      </section>
+    </div>
   );
 };
