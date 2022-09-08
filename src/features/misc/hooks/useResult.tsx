@@ -8,9 +8,11 @@ export type StatusType = 'success' | 'error' | 'warning';
 
 export const useResult = (type: ResultType) => {
   const { redirect } = useRedirect({ location: '/home' });
+
   const successBuyAction = useCallback(() => {
     redirect();
   }, [redirect]);
+
   const successTransferAction = () => {};
   const cancelAction = () => {};
   const overTimeAction = () => {};

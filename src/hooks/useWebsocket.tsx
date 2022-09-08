@@ -9,12 +9,9 @@ type Websocket = {
 };
 
 export const useWebsocket = ({ url, options, BASE_URL = DEFAULT_URL }: Websocket) => {
-  console.log(url);
   const { readyState, sendMessage, lastJsonMessage } = useWebSocket(`${BASE_URL}/${url}`, {
     ...options,
-    onError: (error) => {
-      console.log(error, 'error');
-    },
+    onError: () => {},
     onClose: (e) => {
       console.log(e, 'close');
     },

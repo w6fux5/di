@@ -43,7 +43,12 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
         </Form.Item>
       </Form>
 
-      <a style={{ fontSize: '1rem' }} href="https://www.88u.asia/#/auth/register">
+      <a
+        style={{ fontSize: '1rem' }}
+        href="https://www.88u.asia/#/auth/register"
+        target="_blank"
+        rel="noreferrer"
+      >
         還沒有帳號？現在去註冊
       </a>
     </section>

@@ -12,5 +12,7 @@ export const errorMessage: ErrorMessage = {
 
   '41': '已達交易限額，若需提升交易額度請聯繫客服，謝謝',
 
+  '32': '金額不足',
+
   ERR_BAD_REQUEST: '伺服器忙碌中，請稍後重新提交訂單，謝謝',
 };

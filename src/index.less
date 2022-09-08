@@ -1,6 +1,13 @@
 // @import 'antd/dist/antd.css'; // or 'antd/dist/antd.less'
 @import 'antd/dist/antd.less';
 
+html {
+  font-size: 75%;
+  @media only screen and (min-width: 992px) {
+    font-size: 100%;
+  }
+}
+
 .animation-enter {
   opacity: 0;
   transform: scale(0.9);

@@ -27,7 +27,6 @@ import { useEffect, useCallback, useState } from 'react';
 import { Loading } from '@/components/Loading';
 import { TransferConfirm, useOrderTransfer } from '@/features/transfer';
 import { TransactionInfo, useCheckBalance, usePaymentInfo } from '@/features/user';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useRedirect } from '@/hooks/useRedirect';
 
 import { Result } from '../../components/Result';
@@ -35,13 +34,12 @@ import { Result } from '../../components/Result';
 type GoToTradeProps = 'buy' | 'transfer';
 
 export const Overview = () => {
-  const { xs } = useMediaQuery();
   const { redirect, sessionID, buyOrderToken } = useRedirect({ location: '/home' });
 
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   // user 餘額 api
-  const { data: balance, isLoading: balanceLoading } = useCheckBalance();
+  const { data: balance } = useCheckBalance();
 
   // 付款資訊 api
   const { data: paymentInfo, isLoading: paymentInfoLoading } = usePaymentInfo({
@@ -76,31 +74,35 @@ export const Overview = () => {
     goToTrade('buy');
   }, [buyOrderToken, goToTrade]);
 
-  if (paymentInfoLoading || balanceLoading || !paymentInfo) {
-    return <Loading />;
-  }
+  // if (paymentInfoLoading || balanceLoading || !paymentInfo) {
+  // }
 
   if (transferData) {
     const { order_token: token } = transferData;
     return <Result orderToken={token} type="轉帳完成" status="success" />;
   }
 
-  return (
-    <div style={{ padding: xs ? '10px' : 0 }}>
-      <TransferConfirm
-        isOpen={openModal}
-        setIsOpen={setOpenModal}
-        paymentInfo={paymentInfo}
-        balance={balance}
-        handleTransfer={handleTransfer}
-        transferLoading={transferLoading}
-      />
-      <TransactionInfo
-        goToTrade={goToTrade}
-        balance={balance}
-        paymentInfo={paymentInfo}
-        setOpenModal={setOpenModal}
-      />
-    </div>
-  );
+  if (paymentInfo && balance && !paymentInfoLoading) {
+    return (
+      <>
+        <TransferConfirm
+          isOpen={openModal}
+          setIsOpen={setOpenModal}
+          paymentInfo={paymentInfo}
+          balance={balance}
+          handleTransfer={handleTransfer}
+          transferLoading={transferLoading}
+        />
+        <div style={{ maxWidth: '480px', padding: '1rem' }}>
+          <TransactionInfo
+            goToTrade={goToTrade}
+            balance={balance}
+            paymentInfo={paymentInfo}
+            setOpenModal={setOpenModal}
+          />
+        </div>
+      </>
+    );
+  }
+  return <Loading />;
 };

@@ -31,6 +31,7 @@ export const useChatWidgetSocket = ({ user }: UseChatWidgetSocketProps) => {
 
   const options = {
     onMessage: (message: WebSocketEventMap['message']) => {
+      if (!message?.data) return;
       const dataFromServer = JSON.parse(message?.data);
       if (isArray(dataFromServer)) {
         setMessageList(dataFromServer);

@@ -1,5 +1,5 @@
-import { InfoCircleOutlined } from '@ant-design/icons';
-import { Button, Empty, Space } from 'antd';
+// import { InfoCircleOutlined } from '@ant-design/icons';
+import { Button, Empty } from 'antd';
 
 import { CheckBalanceTypes, PaymentInfoTypes } from '../../api';
 import { TransactionDescription } from '../transaction-description/TransactionDescription';
@@ -33,7 +33,7 @@ export const TransactionInfo = ({
   }
 
   return (
-    <div style={{ maxWidth: '450px' }}>
+    <>
       {paymentInfo && (
         <TransactionDescription
           balance={balance}
@@ -42,26 +42,27 @@ export const TransactionInfo = ({
         />
       )}
 
-      <Space style={{ margin: '1rem 0' }}>
+      {/* <Space style={{ backgroundColor: '' }}>
         <InfoCircleOutlined style={{ color: '#ffc53d', fontSize: '1rem' }} />
-        <span style={{ color: '#ffc53d', fontSize: '8px' }}>
+        <span style={{ color: '#ffc53d', fontSize: '8px', lineHeight: '1' }}>
           此訂單有效時限為2小時，請在有效時限內完成交易，如訂單失效，請重新申請支付。
         </span>
-      </Space>
+      </Space> */}
 
-      <div style={{ textAlign: 'left' }}>
+      <div>
         {goToTrade && finalBalance !== undefined && finalBalance < 0 && (
           <Button block danger onClick={() => goToTrade('buy')} type="primary">
             餘額不足，前往買幣
           </Button>
         )}
+
         {setOpenModal && finalBalance !== undefined && finalBalance >= 0 && (
           <Button block onClick={() => setOpenModal(true)} type="primary">
             送出
           </Button>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

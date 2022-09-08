@@ -51,6 +51,7 @@ export const TransferConfirm = ({
       onOk={handleOk}
       onCancel={handleCancel}
       confirmLoading={transferLoading}
+      centered
       // style={{ backgroundColor: 'red' }}
     >
       <TransactionDescription
