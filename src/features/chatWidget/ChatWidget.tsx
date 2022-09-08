@@ -12,6 +12,8 @@ import { Button, Image } from 'antd';
 import { ChangeEvent, useRef, useState } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 
+import agentImage from '@/assets/agent.jpg';
+import csImage from '@/assets/cs.jpg';
 import { resizeFile } from '@/utils/image-resize';
 
 import { AuthUser } from '../auth';
@@ -82,7 +84,8 @@ export const ChatWidget = ({ user }: ChatWidgetProps) => {
                         <Message.CustomContent>
                           <Image width={120} src={msg} />
                         </Message.CustomContent>
-                        <Avatar src="https://picsum.photos/200/300" />
+                        {role === 2 && <Avatar src={csImage} />}
+                        {role === 3 && <Avatar src={agentImage} />}
                         <Message.Footer sentTime={timer} />
                       </Message>
                     );
@@ -96,7 +99,8 @@ export const ChatWidget = ({ user }: ChatWidgetProps) => {
                         position: 'last',
                       }}
                     >
-                      <Avatar src="https://picsum.photos/200/300" />
+                      {role === 2 && <Avatar src={csImage} />}
+                      {role === 3 && <Avatar src={agentImage} />}
                       <Message.TextContent>{msg}</Message.TextContent>
                       <Message.Footer style={{ color: '#d9d9d9' }}>{timer}</Message.Footer>
                     </Message>

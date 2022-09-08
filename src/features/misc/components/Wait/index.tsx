@@ -28,7 +28,12 @@ export const Wait = ({ hash }: WaitProps) => {
         banner
         message={
           <Marquee pauseOnHover gradient={false}>
-            交易進行中，請勿關閉網頁，否則可能導致交易失敗
+            <span>
+              交易進行中，
+              <span style={{ color: 'red' }}>請勿關閉網頁</span>
+              ，否則可能導致交易失敗。
+            </span>
+            <span style={{ width: '7rem' }} />
           </Marquee>
         }
       />

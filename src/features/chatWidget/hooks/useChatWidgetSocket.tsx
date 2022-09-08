@@ -33,8 +33,10 @@ export const useChatWidgetSocket = ({ user }: UseChatWidgetSocketProps) => {
     onMessage: (message: WebSocketEventMap['message']) => {
       if (!message?.data) return;
       const dataFromServer = JSON.parse(message?.data);
+
       if (isArray(dataFromServer)) {
-        setMessageList(dataFromServer);
+        const reversMessageList = dataFromServer.reverse();
+        setMessageList(reversMessageList);
       } else {
         setMessageList((prev) => [...prev, { ...dataFromServer, id: nanoid() }]);
       }
